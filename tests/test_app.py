@@ -21,6 +21,34 @@ class BmiAppTests(unittest.TestCase):
         self.assertIn("健康體位", page)
         self.assertIn("維持均衡飲食", page)
 
+    def test_bmi_gauge_displays_result_and_position(self):
+        response = self.client.post("/", data={"height": "100", "weight": "22.5"})
+        page = response.get_data(as_text=True)
+
+        self.assertIn('style="--bmi-position: 56.25%"', page)
+        self.assertIn('aria-label="BMI 區間刻度，目前為健康體位"', page)
+        for category in ["體重過輕", "健康體位", "體重過重", "肥胖"]:
+            with self.subTest(category=category):
+                self.assertIn(category, page)
+
+    def test_bmi_gauge_position_starts_at_zero(self):
+        response = self.client.post("/", data={"height": "100", "weight": "0.04"})
+
+        self.assertIn('style="--bmi-position: 0.0%"', response.get_data(as_text=True))
+
+    def test_bmi_gauge_position_clamps_at_scale_maximum(self):
+        response = self.client.post("/", data={"height": "100", "weight": "40"})
+
+        self.assertIn('style="--bmi-position: 100.0%"', response.get_data(as_text=True))
+
+    def test_bmi_gauge_position_clamps_above_scale_maximum(self):
+        for weight in ["50", "1e308"]:
+            with self.subTest(weight=weight):
+                response = self.client.post("/", data={"height": "100", "weight": weight})
+                page = response.get_data(as_text=True)
+
+                self.assertIn('style="--bmi-position: 100.0%"', page)
+
     def test_taiwan_adult_thresholds(self):
         for bmi, category in [
             (18.4, "體重過輕"),

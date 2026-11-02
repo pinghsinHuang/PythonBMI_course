@@ -60,6 +60,12 @@ button span { font-size: 20px; font-weight: 400; }
 .result-main { position: relative; z-index: 1; display: flex; align-items: baseline; gap: 12px; margin-top: 35px; }
 .result-number { font-size: clamp(70px, 8vw, 110px); font-weight: 700; line-height: 1.1; letter-spacing: -.085em; }
 .result-unit { color: #728a77; font-size: 13px; font-weight: 700; letter-spacing: .1em; }
+.bmi-gauge { position: relative; z-index: 1; margin: 28px 0 2px; }
+.bmi-gauge-track { position: relative; height: 12px; border-radius: 999px; background: linear-gradient(90deg, #a2b8ca 0 46.25%, #85b487 46.25% 60%, #e1c37d 60% 67.5%, #ca977d 67.5% 100%); }
+.bmi-gauge-pointer { position: absolute; top: 50%; left: clamp(2px, var(--bmi-position), calc(100% - 2px)); width: 3px; height: 30px; border-radius: 3px; background: #24352f; transform: translate(-50%, -50%); }
+.bmi-gauge-pointer::before { position: absolute; top: -5px; left: -4px; width: 11px; height: 11px; border: 2px solid #fff; border-radius: 50%; background: #24352f; box-shadow: 0 1px 3px #24352f33; content: ""; }
+.bmi-gauge-labels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-top: 16px; color: #5c735e; font-size: 11px; line-height: 1.5; text-align: center; }
+.bmi-gauge-labels small { color: #728a77; font-size: 10px; white-space: nowrap; }
 .result-divider { position: relative; z-index: 1; height: 1px; margin: 22px 0 25px; background: #b6cfb5; }
 .result-label { position: relative; z-index: 1; color: #5c735e; font-size: 14px; }
 .result-label strong { margin-left: 5px; color: #234f37; font-size: 18px; }

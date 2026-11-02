@@ -65,6 +65,17 @@
                   <span class="result-number">{{ result.bmi }}</span>
                   <span class="result-unit">BMI</span>
                 </div>
+                <div class="bmi-gauge" role="group" aria-label="BMI 區間刻度，目前為{{ result.label }}">
+                  <div class="bmi-gauge-track" style="--bmi-position: {{ result.gauge_position }}%" aria-hidden="true">
+                    <span class="bmi-gauge-pointer"></span>
+                  </div>
+                  <div class="bmi-gauge-labels">
+                    <span>體重過輕<br><small>低於 18.5</small></span>
+                    <span>健康體位<br><small>18.5 – 未滿 24</small></span>
+                    <span>體重過重<br><small>24 – 未滿 27</small></span>
+                    <span>肥胖<br><small>27 以上</small></span>
+                  </div>
+                </div>
                 <div class="result-divider"></div>
                 <span class="result-label">你的體位屬於 <strong>{{ result.label }}</strong></span>
                 <h2 id="result-title">給你的健康建議</h2>

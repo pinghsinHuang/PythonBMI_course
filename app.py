@@ -68,7 +68,12 @@ def index():
                     errors["weight"] = "無法使用這組數值計算 BMI，請檢查身高與體重。"
                 else:
                     displayed_bmi = round(bmi, 1)
-                    result = {"bmi": f"{displayed_bmi:.1f}", **bmi_guidance(displayed_bmi)}
+                    gauge_position = min(displayed_bmi, 40) / 40 * 100
+                    result = {
+                        "bmi": f"{displayed_bmi:.1f}",
+                        "gauge_position": gauge_position,
+                        **bmi_guidance(displayed_bmi),
+                    }
 
     return render_template(
         "index.html",
