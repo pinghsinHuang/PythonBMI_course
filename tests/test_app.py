@@ -21,6 +21,49 @@ class BmiAppTests(unittest.TestCase):
         self.assertIn("健康體位", page)
         self.assertIn("維持均衡飲食", page)
 
+    def test_name_is_shown_before_personalized_advice(self):
+        response = self.client.post(
+            "/", data={"name": "小明", "height": "170", "weight": "65"}
+        )
+        page = response.get_data(as_text=True)
+
+        self.assertIn('id="name" name="name"', page)
+        self.assertIn('value="小明"', page)
+        self.assertIn("<p>小明，維持均衡飲食", page)
+
+    def test_blank_name_keeps_generic_advice(self):
+        response = self.client.post(
+            "/", data={"name": "   ", "height": "170", "weight": "65"}
+        )
+        page = response.get_data(as_text=True)
+
+        self.assertIn("<p>維持均衡飲食", page)
+        self.assertNotIn("<p>，維持均衡飲食", page)
+
+    def test_name_is_escaped_in_personalized_advice(self):
+        response = self.client.post(
+            "/",
+            data={
+                "name": "<img src=x onerror=alert(1)>",
+                "height": "170",
+                "weight": "65",
+            },
+        )
+        page = response.get_data(as_text=True)
+
+        self.assertIn("&lt;img src=x onerror=alert(1)&gt;，", page)
+        self.assertNotIn("<img src=x onerror=alert(1)>", page)
+
+    def test_name_is_preserved_when_calculation_inputs_are_invalid(self):
+        response = self.client.post(
+            "/", data={"name": "小明", "height": "", "weight": "65"}
+        )
+        page = response.get_data(as_text=True)
+
+        self.assertIn('id="name" name="name"', page)
+        self.assertIn('value="小明"', page)
+        self.assertIn('aria-invalid="true"', page)
+
     def test_bmi_gauge_displays_result_and_position(self):
         response = self.client.post("/", data={"height": "100", "weight": "22.5"})
         page = response.get_data(as_text=True)
